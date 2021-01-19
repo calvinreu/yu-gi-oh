@@ -1,0 +1,9 @@
+{
+    "ImgFilename" : "../resources/img/facedown.png",
+    "SRect" : {
+        "X" : 0,
+        "Y" : 0,
+        "W" : 138,
+        "H" : 200
+    }
+}

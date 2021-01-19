@@ -1,0 +1,15 @@
+{
+    "Players" : [ { "Deck" : ["ha_gay"], "Extra Deck" : [], "LocationDeck" : { "X" : 970, "Y" : 540}, "LocationExtraDeck" : { "X" : 1380, "Y" : 300} } ],
+    "Cards" : {"facedown" : "../resources/facedown.json", "ha_gay" : "../resources/ha_gay.json"},
+    "CardWidth" : 138,
+    "CardHeight" : 200,
+    "Window" : {
+        "Title" : "yu gi oh test",
+        "X" : 0,
+        "Y" : 0,
+        "Width" : 1920,
+        "Height" : 1080,
+        "WindowFlags" : 1,
+        "RendererFlags" : 2
+    }
+}
