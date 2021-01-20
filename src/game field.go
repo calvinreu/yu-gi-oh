@@ -21,9 +21,9 @@ type CardStack struct {
 
 //SingleCardSlot contains position and Card
 type SingleCardSlot struct {
-	Card     Card
-	Position sdl.Rect
-	Center   sdl.Point
+	Card   Card
+	Place  sdl.Rect
+	Center sdl.Point
 }
 
 //Init slice in card stack
