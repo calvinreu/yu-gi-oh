@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"./lib/graphic"
@@ -11,7 +10,6 @@ import (
 func gameloop(board GameField, window *graphic.Graphic) {
 	//if()
 
-	fmt.Scanln()
 	window.Render()
 	window.Print()
 	time.Sleep(1 * time.Second)

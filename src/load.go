@@ -98,6 +98,7 @@ func (config *Config) Convert() (GameField, *graphic.Graphic) {
 	cards := make(map[string]uint32)
 	var err error
 	gameField := make([]PlayerField, len(config.Players))
+	rects := make([]sdl.Rect, len(config.Players)*15)
 
 	for name, card := range config.Cards {
 		cards[name], err = config.Window.AddSprite(card.ImgFilename, card.SRect)
@@ -146,8 +147,28 @@ func (config *Config) Convert() (GameField, *graphic.Graphic) {
 		player.Graveyard.Init()
 		player.BannedStack.Init()
 		gameField[n] = player
+
+		//Create card rects on screen
+		rects[n*15] = CreateRect(i.LocationDeck, config.CardWidth, config.CardHeight)
+		rects[n*15+1] = CreateRect(i.LocationExtraDeck, config.CardWidth, config.CardHeight)
+		rects[n*15+2] = CreateRect(i.LocationGraveyard, config.CardWidth, config.CardHeight)
+		rects[n*15+3] = CreateRect(i.LocationBannedStack, config.CardWidth, config.CardHeight)
+		rects[n*15+4] = CreateRect(i.LocationMonsterSlot[0], config.CardWidth, config.CardHeight)
+		rects[n*15+5] = CreateRect(i.LocationMonsterSlot[1], config.CardWidth, config.CardHeight)
+		rects[n*15+6] = CreateRect(i.LocationMonsterSlot[2], config.CardWidth, config.CardHeight)
+		rects[n*15+7] = CreateRect(i.LocationMonsterSlot[3], config.CardWidth, config.CardHeight)
+		rects[n*15+8] = CreateRect(i.LocationMonsterSlot[4], config.CardWidth, config.CardHeight)
+		rects[n*15+9] = CreateRect(i.LocationSpellZone[0], config.CardWidth, config.CardHeight)
+		rects[n*15+10] = CreateRect(i.LocationSpellZone[1], config.CardWidth, config.CardHeight)
+		rects[n*15+11] = CreateRect(i.LocationSpellZone[2], config.CardWidth, config.CardHeight)
+		rects[n*15+12] = CreateRect(i.LocationSpellZone[3], config.CardWidth, config.CardHeight)
+		rects[n*15+13] = CreateRect(i.LocationSpellZone[4], config.CardWidth, config.CardHeight)
+		rects[n*15+14] = CreateRect(i.LocationFieldSpell, config.CardWidth, config.CardHeight)
+
 		n++
 	}
+
+	config.Window.SetCardSpaces(rects)
 
 	return gameField, &config.Window
 

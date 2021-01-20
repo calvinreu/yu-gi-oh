@@ -9,9 +9,10 @@ import (
 
 //Graphic contains the information required to render a window with diffrent Sprites
 type Graphic struct {
-	Sprites  []Sprite
-	Renderer *sdl.Renderer
-	window   *sdl.Window
+	Sprites    []Sprite
+	Renderer   *sdl.Renderer
+	window     *sdl.Window
+	cardSpaces []sdl.Rect
 }
 
 //Render renders the information from the graphic object to the screen
@@ -19,6 +20,9 @@ func (graphic *Graphic) Render() {
 
 	graphic.Renderer.SetDrawColor(10, 10, 10, 1)
 	graphic.Renderer.Clear()
+
+	graphic.Renderer.SetDrawColor(100, 100, 100, 1)
+	graphic.Renderer.FillRects(graphic.cardSpaces)
 
 	for _, i := range graphic.Sprites {
 		for _, j := range i.instances {
@@ -42,6 +46,11 @@ func (graphic *Graphic) Print() {
 		}
 	}
 	fmt.Println("--------------------------")
+}
+
+//SetCardSpaces set the rectangle for card spaces
+func (graphic *Graphic) SetCardSpaces(rects []sdl.Rect) {
+	graphic.cardSpaces = rects
 }
 
 //New returns a Graphic object with initialized renderer and window note that Sprites have to be added manual
