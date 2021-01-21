@@ -56,10 +56,7 @@ func (graphic *Graphic) SetCardSpaces(rects []sdl.Rect) {
 //New returns a Graphic object with initialized renderer and window note that Sprites have to be added manual
 func New(title string, x, y, width, heigh int32, WindowFlags, RendererFlags uint32) (Graphic, error) {
 	var graphic Graphic
-	err := sdl.Init(sdl.INIT_VIDEO)
-	if err != nil {
-		return graphic, err
-	}
+	var err error
 
 	graphic.window, err = sdl.CreateWindow(title, x, y, width, heigh, WindowFlags)
 	if err != nil {

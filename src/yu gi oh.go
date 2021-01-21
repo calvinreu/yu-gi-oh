@@ -19,6 +19,12 @@ func main() {
 		return
 	}
 
+	err := sdl.Init(sdl.INIT_VIDEO | sdl.INIT_EVENTS)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	config.Load(args[0])
 	gameloop(config.Convert())
 
