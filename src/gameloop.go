@@ -8,28 +8,36 @@ import (
 )
 
 func gameloop(board GameField, window *graphic.Graphic) {
-	//if()
 
-	window.Render()
-	window.Print()
-	time.Sleep(1 * time.Second)
-	board[0].Deck.Cards[0].FaceUp(board[0].Deck.Center, false)
+	var cursor sdl.Point
+	var state uint32
 
-	window.Render()
-	window.Print()
-	time.Sleep(1 * time.Second)
+	for true {
 
-	board[0].Deck.Cards[0].FaceDown(board[0].Deck.Center, true)
+		start := time.Now()
 
-	window.Render()
-	window.Print()
-	time.Sleep(1 * time.Second)
+		for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
+			switch e.GetType() {
+			case sdl.QUIT:
+				return
+			}
+		}
 
-	board[0].Deck.Cards[0].FaceUp(board[0].Deck.Center, true)
+		cursor.X, cursor.Y, state = sdl.GetMouseState()
 
-	window.Render()
-	window.Print()
-	time.Sleep(1 * time.Second)
+		window.Render()
+
+		if state == sdl.MOUSE
+		if cards, ok := StackSelected(&board, cursor); ok { //TODO show cards from stack
+			//do smth with the stack
+		} else if card, ok := CardSelected(&board, cursor); ok {
+			//do smth with the stack
+		}
+
+		if time.Since(start) < 16 {
+			time.Sleep(16 - time.Since(start))
+		}
+	}
 }
 
 /*func refresh(board *GameField, window *graphic.Graphic) {
