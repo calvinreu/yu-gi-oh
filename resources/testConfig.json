@@ -1,5 +1,5 @@
 {
-    "Players" : [ { "Deck" : ["ha_gay"], "Extra Deck" : [], "LocationDeck" : { "X" : 970, "Y" : 540}, "LocationExtraDeck" : { "X" : 500, "Y" : 900} } ],
+    "Players" : [ { "Deck" : ["ha_gay"], "ExtraDeck" : ["ha_gay", "ha_gay"], "LocationDeck" : { "X" : 970, "Y" : 540}, "LocationExtraDeck" : { "X" : 500, "Y" : 540} } ],
     "Cards" : {"facedown" : "../resources/facedown.json", "ha_gay" : "../resources/ha_gay.json"},
     "CardWidth" : 138,
     "CardHeight" : 200,
