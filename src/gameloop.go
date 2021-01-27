@@ -3,14 +3,15 @@ package main
 import (
 	"time"
 
+	"./lib/game"
 	"./lib/graphic"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func gameloop(board GameField, window *graphic.Graphic) {
+func gameloop(board game.GameField, window *graphic.Graphic) {
 
 	var cursor sdl.Point
-	var state uint32
+	//var state uint32
 
 	for true {
 
@@ -23,16 +24,21 @@ func gameloop(board GameField, window *graphic.Graphic) {
 			}
 		}
 
-		cursor.X, cursor.Y, state = sdl.GetMouseState()
+		cursor.X, cursor.Y, _ = sdl.GetMouseState()
 
-		window.Render()
-
-		if state == sdl.MOUSE
+		//if state == sdl.MOUSEBUTTONDOWN {
 		if cards, ok := StackSelected(&board, cursor); ok { //TODO show cards from stack
-			//do smth with the stack
+			if len(cards.Cards) > 0 {
+				window.RenderStack(cards.CreateRenderStack())
+				//do smth with the stack
+			}
 		} else if card, ok := CardSelected(&board, cursor); ok {
-			//do smth with the stack
+			card.Card.ZoomOnce()
+			//do smth with card
+		} else {
+			window.RenderBoard()
 		}
+		//}
 
 		if time.Since(start) < 16 {
 			time.Sleep(16 - time.Since(start))
@@ -47,7 +53,7 @@ func gameloop(board GameField, window *graphic.Graphic) {
 }*/
 
 //StackSelected return the stack which is selected if one is selected if not the bool is true
-func StackSelected(board *GameField, cursor sdl.Point) (*CardStack, bool) {
+func StackSelected(board *game.GameField, cursor sdl.Point) (*game.CardStack, bool) {
 
 	for _, i := range *board {
 		if IsInRect(i.Deck.Place, cursor) {
@@ -68,7 +74,7 @@ func StackSelected(board *GameField, cursor sdl.Point) (*CardStack, bool) {
 }
 
 //CardSelected return the stack which is selected if one is selected if not the bool is true
-func CardSelected(board *GameField, cursor sdl.Point) (*SingleCardSlot, bool) {
+func CardSelected(board *game.GameField, cursor sdl.Point) (*game.SingleCardSlot, bool) {
 
 	for _, i := range *board {
 		if IsInRect(i.FieldSpell.Place, cursor) {
