@@ -1,6 +1,9 @@
-package main
+package game
 
-import "github.com/veandco/go-sdl2/sdl"
+import (
+	"../graphic"
+	"github.com/veandco/go-sdl2/sdl"
+)
 
 //GameField contains the playing field
 type GameField []PlayerField
@@ -29,4 +32,17 @@ type SingleCardSlot struct {
 //Init slice in card stack
 func (cardStack *CardStack) Init() {
 	cardStack.Cards = make([]Card, 0)
+}
+
+//CreateRenderStack list the cards and returns the card instances to render
+func (cardStack *CardStack) CreateRenderStack() []graphic.Instance {
+	instances := make([]graphic.Instance, len(cardStack.Cards))
+
+	for n, i := range cardStack.Cards {
+		instances[n] = i.GetCardInstance()
+		instances[n].NewPositionCorner(sdl.FPoint{(float32)(n) * (i.GetCardInstance().GetBaseWitdth()), 0})
+		instances[n].Show()
+	}
+
+	return instances
 }
