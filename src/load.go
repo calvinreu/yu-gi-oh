@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"./lib/game"
 	"./lib/graphic"
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -94,10 +95,10 @@ func (cardConfig *CardConfig) Load(filename string) {
 }
 
 //Convert convertes a config file to a graphic.Graphic and a GameField
-func (config *Config) Convert() (GameField, *graphic.Graphic) {
+func (config *Config) Convert() (game.GameField, *graphic.Graphic) {
 	cards := make(map[string]uint32)
 	var err error
-	gameField := make([]PlayerField, len(config.Players))
+	gameField := make([]game.PlayerField, len(config.Players))
 	rects := make([]sdl.Rect, len(config.Players)*15)
 
 	for name, card := range config.Cards {
@@ -110,39 +111,41 @@ func (config *Config) Convert() (GameField, *graphic.Graphic) {
 	}
 
 	n := 0 //count players
-	var emptyPoint sdl.Point
+	var emptyPoint sdl.FPoint
 	for _, i := range config.Players {
-
-		//Create deck
-		deckSpace := CreateRect(i.LocationDeck, config.CardWidth, config.CardHeight)
-		deck := CardStack{make([]Card, len(i.Deck)), deckSpace, i.LocationDeck}
-		for j := 0; j < len(i.Deck)-1; j++ {
-			deck.Cards[j].SetCardInstance(config.Window.Sprites[cards[i.Deck[j]]].NewInstance(0, emptyPoint))
-			deck.Cards[j].SetFaceDownInstance(config.Window.Sprites[cards["facedown"]].NewInstance(0, emptyPoint))
-			deck.Cards[j].Hide()
-		}
-		lastCard := len(i.Deck) - 1 //last item in deck
-		deck.Cards[lastCard].SetCardInstance(config.Window.Sprites[cards[i.Deck[lastCard]]].NewInstance(0, emptyPoint))
-		deck.Cards[lastCard].SetFaceDownInstance(config.Window.Sprites[cards["facedown"]].NewInstance(0, emptyPoint))
-		deck.Cards[lastCard].FaceDown(i.LocationDeck, false)
 
 		//Create Extra Deck
 		extraDeckSpace := CreateRect(i.LocationExtraDeck, config.CardWidth, config.CardHeight)
-		extraDeck := CardStack{make([]Card, len(i.ExtraDeck)), extraDeckSpace, i.LocationExtraDeck}
+		extraDeck := game.CardStack{make([]game.Card, len(i.ExtraDeck)), extraDeckSpace, i.LocationExtraDeck}
 		for j := 0; j < len(i.ExtraDeck)-1; j++ {
 			extraDeck.Cards[j].SetCardInstance(config.Window.Sprites[cards[i.ExtraDeck[j]]].NewInstance(0, emptyPoint))
 			extraDeck.Cards[j].SetFaceDownInstance(config.Window.Sprites[cards["facedown"]].NewInstance(0, emptyPoint))
 			extraDeck.Cards[j].Hide()
 		}
-		lastCard = len(i.ExtraDeck) - 1 //last item in deck
+		lastCard := len(i.ExtraDeck) - 1 //last item in deck
 
 		if lastCard != -1 {
 			extraDeck.Cards[lastCard].SetCardInstance(config.Window.Sprites[cards[i.ExtraDeck[lastCard]]].NewInstance(0, emptyPoint))
 			extraDeck.Cards[lastCard].SetFaceDownInstance(config.Window.Sprites[cards["facedown"]].NewInstance(0, emptyPoint))
-			extraDeck.Cards[lastCard].FaceDown(i.LocationExtraDeck, false)
+			extraDeck.Cards[lastCard].FaceDown(FPoint(i.LocationExtraDeck), false)
 		}
 
-		var player PlayerField
+		//Create deck
+		deckSpace := CreateRect(i.LocationDeck, config.CardWidth, config.CardHeight)
+		deck := game.CardStack{make([]game.Card, len(i.Deck)), deckSpace, i.LocationDeck}
+		for j := 0; j < len(i.Deck)-1; j++ {
+			deck.Cards[j].SetCardInstance(config.Window.Sprites[cards[i.Deck[j]]].NewInstance(0, emptyPoint))
+			deck.Cards[j].SetFaceDownInstance(config.Window.Sprites[cards["facedown"]].NewInstance(0, emptyPoint))
+			deck.Cards[j].Hide()
+		}
+		lastCard = len(i.Deck) - 1 //last item in deck
+		if lastCard != -1 {
+			deck.Cards[lastCard].SetCardInstance(config.Window.Sprites[cards[i.Deck[lastCard]]].NewInstance(0, emptyPoint))
+			deck.Cards[lastCard].SetFaceDownInstance(config.Window.Sprites[cards["facedown"]].NewInstance(0, emptyPoint))
+			deck.Cards[lastCard].FaceDown(FPoint(i.LocationDeck), false)
+		}
+
+		var player game.PlayerField
 		player.Deck, player.ExtraDeck = deck, extraDeck
 		player.Graveyard.Init()
 		player.BannedStack.Init()
@@ -182,4 +185,8 @@ func CreateRect(center sdl.Point, W, H int32) sdl.Rect {
 	rect.W = W
 	rect.H = H
 	return rect
+}
+
+func FPoint(point sdl.Point) sdl.FPoint {
+	return sdl.FPoint{(float32)(point.X), (float32)(point.Y)}
 }
