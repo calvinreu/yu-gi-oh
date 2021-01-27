@@ -15,21 +15,34 @@ type Graphic struct {
 	cardSpaces []sdl.Rect
 }
 
-//Render renders the information from the graphic object to the screen
-func (graphic *Graphic) Render() {
+//RenderBoard renders the information from the graphic object to the screen
+func (graphic *Graphic) RenderBoard() {
 
 	graphic.Renderer.SetDrawColor(10, 10, 10, 1)
 	graphic.Renderer.Clear()
 
-	graphic.Renderer.SetDrawColor(100, 100, 100, 1)
+	graphic.Renderer.SetDrawColor(0, 100, 200, 1)
 	graphic.Renderer.FillRects(graphic.cardSpaces)
 
 	for _, i := range graphic.Sprites {
-		for _, j := range i.instances {
-			err := graphic.Renderer.CopyEx(i.texture, &i.srcRect, &j.destRect, j.angle, &j.center, sdl.FLIP_NONE)
+		for j := i.instances.First(); j.Next() != nil; j = j.Next() {
+			err := graphic.Renderer.CopyExF(i.texture, &i.srcRect, &j.Value.destRect, j.Value.angle, &j.Value.center, sdl.FLIP_NONE)
 			if err != nil {
 				fmt.Println("error in render call : ", err)
 			}
+		}
+	}
+	graphic.Renderer.Present()
+}
+
+//RenderStack renders one stack of cards
+func (graphic *Graphic) RenderStack(instances []Instance) {
+	graphic.Renderer.SetDrawColor(10, 10, 10, 1)
+	graphic.Renderer.Clear()
+	for _, i := range instances {
+		err := graphic.Renderer.CopyExF(i.parentSprite.texture, &i.parentSprite.srcRect, &i.destRect, i.angle, &i.center, sdl.FLIP_NONE)
+		if err != nil {
+			fmt.Println("error in render call : ", err)
 		}
 	}
 	graphic.Renderer.Present()
@@ -39,10 +52,10 @@ func (graphic *Graphic) Render() {
 func (graphic *Graphic) Print() {
 	for _, i := range graphic.Sprites {
 		fmt.Println("sRect : ", i.srcRect)
-		for _, j := range i.instances {
-			fmt.Println("dRect", j.destRect)
-			fmt.Println("Center", j.center)
-			fmt.Println("Angle", j.angle)
+		for j := i.instances.First(); j.Next() != nil; j = j.Next() {
+			fmt.Println("dRect", j.Value.destRect)
+			fmt.Println("Center", j.Value.center)
+			fmt.Println("Angle", j.Value.angle)
 		}
 	}
 	fmt.Println("--------------------------")
